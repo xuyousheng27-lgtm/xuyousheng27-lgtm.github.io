@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html>
+<body>
+
+<div id="login">
+    <h1>登入</h1>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            background: linear-gradient(135deg, #74b9ff, #9bfeba);
+            height:100vh;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #login{
+            background-color:white;
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            width: 300px;        /* 固定寬度，不要100% */
+            text-align: center;
+            font-size: 15px;
+        }
+        #login h1 { margin-bottom: 25px; color: #2d3436;}
+        #login p { margin: 10px 0 5px 0; font-weight: bold; color: #636e72; }
+        
+        #login button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #0984e3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        #login input {
+            display: block;   /* 讓 input 當作區塊元素 */
+            width: 100%;      /* 填滿父容器 */
+            box-sizing: border-box; /* 包含 padding 與 border，避免超出父容器 */
+            padding: 10px;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            margin-bottom: 15px; /* 欄位間距 */         
+        }
+        #login button:hover { background-color: #74b9ff; }
+    </style>
+    <p>用戶名子</p><input type="text" id="lo">
+    <p>密碼</p><input type="text" id="hdd">
+    <button id="btn">登入</button>
+    
+
+
+
+</div>
+
+<!--搜尋區-->
+
+<div id="tofind"style="display:none;">
+    <h1>搜尋</h1>
+    <input type="text" id="search" placeholder="請輸入全名">
+    <ul id="patientlist"></ul>
+
+    <script>
+        
+
+        fetch("https://myapp.onrender.com/data")
+            .then(r=>r.json())
+            .then(data=>patients=data)
+            .catch(err=>console.error('抓取資料錯誤:',err));
+
+    const input=document.getElementById("search");
+    const list=document.getElementById("patientlist");
+
+    input.addEventListener("input",()=>{
+
+        fetch("https://myapp.onrender.com/data")
+            .then(r=>r.json())
+            .then(data=>patients=data)
+            .catch(err=>console.error('抓取資料錯誤:',err));
+
+        const name=input.value.trim();
+        list.innerHTML="";
+
+        if (patients[name]){
+            const li=document.createElement("li");
+            li.innerHTML=`
+            <b>姓名: ${name}</b><br>
+            <b>ID: ${patients[name].id}</b><br>
+            <b>年齡: ${patients[name].age}</b>
+            `;
+
+            
+            list.appendChild(li);
+        }
+    });
+
+    </script>
+</div>
+</body>
+<script>
+let patients = {};
+
+const loginBtn = document.getElementById("btn");
+const loInput = document.getElementById("lo");
+const pwdInput = document.getElementById("hdd");
+const loginDiv = document.getElementById("login");
+const searchDiv = document.getElementById("tofind");
+
+const searchInput = document.getElementById("search");
+const searchList = document.getElementById("patientlist");
+
+// 登入按鈕事件
+loginBtn.addEventListener("click", () => {
+    const user = loInput.value.trim();
+    const pwd = pwdInput.value.trim();
+
+    // ✅ 這裡改成雲端 URL
+    fetch("https://myapp.onrender.com/data")
+        .then(r => r.json())
+        .then(data => patients = data)
+        .catch(err => console.error('抓取資料錯誤:',err));
+
+    // 簡單驗證
+    if(user in patients) {
+        if('cmd' in patients[user]) {
+            loginDiv.style.display = "none";
+            searchDiv.style.display = "block";
+
+            fetch("https://myapp.onrender.com/data")
+                .then(r => r.json())
+                .then(data => patients = data)
+                .catch(err => console.error('抓取資料錯誤:',err));
+        }
+    } else {
+        alert("帳號或密碼錯誤");
+    }
+});
+
+// 搜尋功能
+searchInput.addEventListener("input", () => {
+    const name = searchInput.value.trim();
+    searchList.innerHTML = "";
+
+    if(patients[name]){
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <b>姓名: ${name}</b><br>
+            <b>ID: ${patients[name].id}</b><br>
+            <b>年齡: ${patients[name].age}</b>
+        `;
+        searchList.appendChild(li);
+    }
+});
+    </script>
+
+
+
+
+
+</html>
