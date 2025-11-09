@@ -70,7 +70,7 @@
     <script>
         
 
-        fetch("http://127.0.0.1:5000/data")
+        fetch("https://myapp.onrender.com/data")
             .then(r=>r.json())
             .then(data=>patients=data)
             .catch(err=>console.error('抓取資料錯誤:',err));
@@ -80,7 +80,7 @@
 
     input.addEventListener("input",()=>{
 
-        fetch("http://127.0.0.1:5000/data")
+        fetch("https://myapp.onrender.com/data")
             .then(r=>r.json())
             .then(data=>patients=data)
             .catch(err=>console.error('抓取資料錯誤:',err));
@@ -105,7 +105,6 @@
 </div>
 </body>
 <script>
-        
 let patients = {};
 
 const loginBtn = document.getElementById("btn");
@@ -122,28 +121,27 @@ loginBtn.addEventListener("click", () => {
     const user = loInput.value.trim();
     const pwd = pwdInput.value.trim();
 
-    fetch("http://127.0.0.1:5000/data")
-            .then(r => r.json())
-            .then(data => patients = data)
-            .catch(err => console.error('抓取資料錯誤:',err));
-            
+    // ✅ 這裡改成雲端 URL
+    fetch("https://myapp.onrender.com/data")
+        .then(r => r.json())
+        .then(data => patients = data)
+        .catch(err => console.error('抓取資料錯誤:',err));
+
     // 簡單驗證
     if(user in patients) {
         if('cmd' in patients[user]) {
-        loginDiv.style.display = "none";
-        searchDiv.style.display = "block";
+            loginDiv.style.display = "none";
+            searchDiv.style.display = "block";
 
-        // 讀取資料
-        fetch("http://127.0.0.1:5000/data")
-            .then(r => r.json())
-            .then(data => patients = data)
-            .catch(err => console.error('抓取資料錯誤:',err));}
-        
-
-    }else{alert("帳號或密碼錯誤");}}  
-        
-    
-);
+            fetch("https://myapp.onrender.com/data")
+                .then(r => r.json())
+                .then(data => patients = data)
+                .catch(err => console.error('抓取資料錯誤:',err));
+        }
+    } else {
+        alert("帳號或密碼錯誤");
+    }
+});
 
 // 搜尋功能
 searchInput.addEventListener("input", () => {
@@ -160,16 +158,6 @@ searchInput.addEventListener("input", () => {
         searchList.appendChild(li);
     }
 });
-</script>
-
-
-
-            
-
-            
-        
-
-        
     </script>
 
 
