@@ -1,3 +1,0 @@
-Flask
-flask-cors
-/templates/index.html
