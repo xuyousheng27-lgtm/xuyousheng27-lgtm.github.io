@@ -1,26 +1,84 @@
+<!DOCTYPE html>
+<html>
 <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <style>
+    html body {
+        overflow: hidden;
+        margin: 0;               
+        touch-action: none;        
+      }
+
+    #fire{
+      position: fixed;
+      right: 80px;
+      bottom: 80px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: red;
+      color: white;
+      font-size: 20px;
+      border: none;
+      box-shadow: 0 0 15px rgba(255,0,0,0.6);
+    }
+    
+
+  </style>
+
+</head>
+
+<body>
+
+  
+  <button id="fire">發射</button>
+
+</body>
+
 <script>
-const config = {
-  type: Phaser.AUTO,
-  width: window.innerWidth,
-  height: window.innerHeight,
-  backgroundColor: '#87CEEB',
-  scene: {
-    create,
-    update
+  const config = {
+  type: Phaser.AUTO,       // 自動選擇 WebGL 或 Canvas
+  width:window.innerWidth,              // 遊戲畫面的寬
+  height:window.innerHeight,             // 高
+  backgroundColor: '#1e90ff', // 背景顏色
+  scene: { preload, create, update } // 指定這三個函式
+  };  
+  const game = new Phaser.Game(config);
+
+  function preload() {
+  console.log("preload(): 載入遊戲資源（例如圖片、音效）");
+  };
+  function create() {
+  console.log("create(): 建立遊戲畫面");
+
+    player=this.add.rectangle(200,200,100,100,0x00ff00)
+    texts=this.add.text(100,80,"射擊我",{ fontSize: "30px",color: "#ffffff",fontStyle: "bold"})
+
+    texts.setOrigin(0.5)
+
+    const fire = document.getElementById("fire");
+    fire.addEventListener("click",()=>{
+      player.fillColor=0xff0000;
+    });
   }
-};
 
-const game = new Phaser.Game(config);
-let rect;
 
-function create() {
-  rect = this.add.rectangle(200, 200, 200, 120, 0x00ff00);
-  this.input.on('pointermove', pointer => {
-    rect.x = pointer.x;
-    rect.y = pointer.y;
-  });
+  
+  function update() {
+  if (player) {
+        player.x += 1;
+        texts.x=player.x;
+        texts.y=player.y;
+        if (player.x > window.innerWidth + 50) {
+          player.x = -50; // 跑出畫面就從左邊回來
+          texts.x = -50;
+        }
+      }
 }
-
-function update() {}
 </script>
+
+
+</html>
+
