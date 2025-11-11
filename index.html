@@ -38,6 +38,11 @@
 </body>
 
 <script>
+  let list={};
+  let speed=20;
+  let i=0
+  
+
   const config = {
   type: Phaser.AUTO,       // 自動選擇 WebGL 或 Canvas
   width:window.innerWidth,              // 遊戲畫面的寬
@@ -46,39 +51,69 @@
   scene: { preload, create, update } // 指定這三個函式
   };  
   const game = new Phaser.Game(config);
+  //碰撞
+  function checkOverlap(a, b) {
+  if (!a || !b) return false;
+  const aBounds = a.getBounds();
+  const bBounds = b.getBounds();
+  return Phaser.Geom.Intersects.RectangleToRectangle(aBounds, bBounds);
+}
 
   function preload() {
   console.log("preload(): 載入遊戲資源（例如圖片、音效）");
   };
+
   function create() {
   console.log("create(): 建立遊戲畫面");
+    const th=this;
 
-    player=this.add.rectangle(200,200,100,100,0x00ff00)
-    texts=this.add.text(100,80,"射擊我",{ fontSize: "30px",color: "#ffffff",fontStyle: "bold"})
+    player=th.add.rectangle(200,200,100,100,0x00ff00)
+    texts=th.add.text(100,80,"射擊我",{ fontSize: "30px",color: "#ffffff",fontStyle: "bold"})
 
     texts.setOrigin(0.5)
 
     const fire = document.getElementById("fire");
     fire.addEventListener("click",()=>{
-      player.fillColor=0xff0000;
+      console.log(list)
+      let x=500
+      let y=500
+      gun=th.add.rectangle(x,y,50,50,0x00ff00)
+      list[i++]=gun
+
     });
   }
-
+  
 
   
   function update() {
   if (player) {
-        player.x += 1;
+        player.x += 10;
         texts.x=player.x;
         texts.y=player.y;
         if (player.x > window.innerWidth + 50) {
           player.x = -50; // 跑出畫面就從左邊回來
           texts.x = -50;
+          player.fillColor=0x00ff00
         }
       }
+  for (let key of Object.keys(list)){
+    let gun=list[key];
+    gun.y-=speed;
+    
+    if (gun.y + speed < 0){
+      gun.destroy();
+      delete list[key]
+    }
+  
+  if (checkOverlap(gun, player)){
+    console.log('touch')
+    player.fillColor= 0xff0000;
+  }
+}
 }
 </script>
 
 
 </html>
+
 
