@@ -1,54 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-  <style>
-    html body {
-        overflow: hidden;
-        margin: 0;               
-        touch-action: none;        
-      }
-
-    #fire{
-      position: fixed;
-      right: 80px;
-      bottom: 80px;
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      background: red;
-      color: white;
-      font-size: 20px;
-      border: none;
-      box-shadow: 0 0 15px rgba(255,0,0,0.6);
-    }
-
-  </style>
-
-</head>
-
-<body>
-
-  <canvas id="Canvas" width="3000" height="3000" style="border:1px solid black;"></canvas>
-  <button id="fire">發射</button>
-
-</body>
-
+<script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
 <script>
-  let ctx=document.getElementById("Canvas");
-  let canvas=ctx.getContext("2d")
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+const config = {
+  type: Phaser.AUTO,
+  width: window.innerWidth,
+  height: window.innerHeight,
+  backgroundColor: '#87CEEB',
+  scene: {
+    create,
+    update
+  }
+};
 
-  canvas.fillStyle="green";
-  canvas.fillRect(50,50,200,100);
+const game = new Phaser.Game(config);
+let rect;
 
-  document.getElementById("fire").addEventListener("click",()=>{
-  alert("fire!");
+function create() {
+  rect = this.add.rectangle(200, 200, 200, 120, 0x00ff00);
+  this.input.on('pointermove', pointer => {
+    rect.x = pointer.x;
+    rect.y = pointer.y;
   });
+}
+
+function update() {}
 </script>
-
-
-</html>
-
